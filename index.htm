@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Altitude Monitor</title>
+</head>
+<body>
+    <h1>Altitude Monitor</h1>
+    <p id="altitude">Altitude: -- meters</p>
+    <p id="feedback"></p>
+
+    <script>
+        if ('BarometricPressureSensor' in window) {
+            const sensor = new BarometricPressureSensor();
+
+            sensor.onreading = () => {
+                const altitude = sensor.altitude;
+                document.getElementById('altitude').innerText = `Altitude: ${altitude} meters`;
+            };
+
+            sensor.start();
+        } else {
+            document.getElementById('feedback').innerText = `Barometric Pressure Sensor is not supported on this device.`;
+        }
+    </script>
+</body>
+</html>
