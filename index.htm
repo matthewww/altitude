@@ -27,14 +27,14 @@
 
         document.getElementById('requestPermission').addEventListener('click', () => {
             if ('permissions' in navigator) {
-                navigator.permissions.query({ name: 'barometer' })
+                navigator.permissions.query({ name: 'geolocation' })
                     .then(permissionStatus => {
                         if (permissionStatus.state === 'granted') {
                             startSensor();
                         } else if (permissionStatus.state === 'prompt') {
                             return permissionStatus.request();
                         } else {
-                            document.getElementById('feedback').innerText = 'Permission for the barometer sensor is denied.';
+                            document.getElementById('feedback').innerText = 'Permission for the geolocation sensor is denied.';
                         }
                     })
                     .then(permission => {
