@@ -25,20 +25,24 @@
             }
         }
 
-        document.getElementById('requestPermission').addEventListener('click', () => {
+ document.getElementById('requestPermission').addEventListener('click', () => {
             if ('permissions' in navigator) {
                 navigator.permissions.query({ name: 'geolocation' })
                     .then(permissionStatus => {
                         if (permissionStatus.state === 'granted') {
+                            // Permission is already granted, start the sensor
                             startSensor();
                         } else if (permissionStatus.state === 'prompt') {
+                            // Permission is not granted, request it
                             return permissionStatus.request();
                         } else {
+                            // Permission is denied
                             document.getElementById('feedback').innerText = 'Permission for the geolocation sensor is denied.';
                         }
                     })
                     .then(permission => {
                         if (permission.state === 'granted') {
+                            // Permission granted, start the sensor
                             startSensor();
                         }
                     });
