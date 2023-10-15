@@ -10,6 +10,7 @@
     <p>Position Accuracy: <span id="positionAccuracy">N/A</span> meters</p>
     <p>Altitude: <span id="altitude">N/A</span> meters</p>
     <p>Altitude Accuracy: <span id="altitudeAccuracy">N/A</span> meters</p>
+    <p id="feedback">Feedback</p>
 
     <script>
         function updateLocation(position) {
@@ -21,7 +22,7 @@
         }
 
         function handleLocationError(error) {
-            console.error("Error getting geolocation: " + error.message);
+            document.getElementById("feedback").innerText = `Error getting geolocation: {error.message}`;
         }
 
         if ("geolocation" in navigator) {
