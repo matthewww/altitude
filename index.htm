@@ -5,12 +5,13 @@
 </head>
 <body>
     <h1>Geolocation Tracker</h1>
+    <p id="feedback"></p>
     <p>Latitude: <span id="latitude">N/A</span></p>
     <p>Longitude: <span id="longitude">N/A</span></p>
     <p>Position Accuracy: <span id="positionAccuracy">N/A</span> meters</p>
     <p>Altitude: <span id="altitude">N/A</span> meters</p>
     <p>Altitude Accuracy: <span id="altitudeAccuracy">N/A</span> meters</p>
-    <p id="feedback">Feedback</p>
+    <p>Altitude (Barometric Pressure): <span id="barometricAltitude">N/A</span> meters</p>
 
     <script>
         function updateLocation(position) {
@@ -29,6 +30,15 @@
             navigator.geolocation.watchPosition(updateLocation, handleLocationError);
         } else {
             alert("Geolocation is not supported in your browser");
+        }
+
+        if ("barometricPressure" in window) {
+            function updateBarometricAltitude(altitude) {
+                document.getElementById("barometricAltitude").textContent = altitude;
+            }
+        window.barometricPressure.watchAltitude(updateBarometricAltitude);
+        } else {
+            document.getElementById("barometricAltitude").textContent = "N/A (Not supported)";
         }
     </script>
 </body>
