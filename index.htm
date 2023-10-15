@@ -1,53 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Altitude Monitor</title>
+    <title>Geolocation Tracker</title>
 </head>
 <body>
-    <h1>Altitude</h1>
-    <p id="altitude">Altitude: -- meters</p>
-    <p id="feedback">~</p>
-    <button id="requestPermission">Request Sensor Permission</button>
+    <h1>Geolocation Tracker</h1>
+    <p>Latitude: <span id="latitude">N/A</span></p>
+    <p>Longitude: <span id="longitude">N/A</span></p>
+    <p>Position Accuracy: <span id="positionAccuracy">N/A</span> meters</p>
+    <p>Altitude: <span id="altitude">N/A</span> meters</p>
+    <p>Altitude Accuracy: <span id="altitudeAccuracy">N/A</span> meters</p>
 
     <script>
-        function startSensor() {
-            if ('GeolocationSensor' in window) {
-            const sensor = new GeolocationSensor({ frequency: 1000 });
-
-                sensor.onreading = () => {
-                    const altitude = sensor.altitude;
-                    document.getElementById('altitude').innerText = `Altitude: ${altitude} meters`;
-                };
-
-                sensor.start();
-            } else {
-                document.getElementById('feedback').innerText = 'GeolocationSensor is not supported on this device.';
-            }
+        function updateLocation(position) {
+            document.getElementById("latitude").textContent = position.coords.latitude;
+            document.getElementById("longitude").textContent = position.coords.longitude;
+            document.getElementById("positionAccuracy").textContent = position.coords.accuracy;
+            document.getElementById("altitude").textContent = position.coords.altitude;
+            document.getElementById("altitudeAccuracy").textContent = position.coords.altitudeAccuracy;
         }
 
- document.getElementById('requestPermission').addEventListener('click', () => {
-            if ('permissions' in navigator) {
-                navigator.permissions.query({ name: 'geolocation' })
-                    .then(permissionStatus => {
-                        if (permissionStatus.state === 'granted') {
-                            // Permission is already granted, start the sensor
-                            startSensor();
-                        } else if (permissionStatus.state === 'prompt') {
-                            // Permission is not granted, request it
-                            return permissionStatus.request();
-                        } else {
-                            // Permission is denied
-                            document.getElementById('feedback').innerText = 'Permission for the geolocation sensor is denied.';
-                        }
-                    })
-                    .then(permission => {
-                        if (permission.state === 'granted') {
-                            // Permission granted, start the sensor
-                            startSensor();
-                        }
-                    });
-            }
-        });
+        function handleLocationError(error) {
+            console.error("Error getting geolocation: " + error.message);
+        }
+
+        if ("geolocation" in navigator) {
+            navigator.geolocation.watchPosition(updateLocation, handleLocationError);
+        } else {
+            alert("Geolocation is not supported in your browser");
+        }
     </script>
 </body>
 </html>
