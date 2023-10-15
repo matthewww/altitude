@@ -4,23 +4,46 @@
     <title>Altitude Monitor</title>
 </head>
 <body>
-    <h1>Altitude Monitor</h1>
+    <h1>Altitude</h1>
     <p id="altitude">Altitude: -- meters</p>
-    <p id="feedback"></p>
+    <p id="feedback">~</p>
+    <button id="requestPermission">Request Sensor Permission</button>
 
     <script>
-        if ('BarometricPressureSensor' in window) {
-            const sensor = new BarometricPressureSensor();
+        function startSensor() {
+            if ('GeolocationSensor' in window) {
+            const sensor = new GeolocationSensor({ frequency: 1000 });
 
-            sensor.onreading = () => {
-                const altitude = sensor.altitude;
-                document.getElementById('altitude').innerText = `Altitude: ${altitude} meters`;
-            };
+                sensor.onreading = () => {
+                    const altitude = sensor.altitude;
+                    document.getElementById('altitude').innerText = `Altitude: ${altitude} meters`;
+                };
 
-            sensor.start();
-        } else {
-            document.getElementById('feedback').innerText = `Barometric Pressure Sensor is not supported on this device.`;
+                sensor.start();
+            } else {
+                document.getElementById('feedback').innerText = 'GeolocationSensor is not supported on this device.';
+            }
         }
+
+        document.getElementById('requestPermission').addEventListener('click', () => {
+            if ('permissions' in navigator) {
+                navigator.permissions.query({ name: 'barometer' })
+                    .then(permissionStatus => {
+                        if (permissionStatus.state === 'granted') {
+                            startSensor();
+                        } else if (permissionStatus.state === 'prompt') {
+                            return permissionStatus.request();
+                        } else {
+                            document.getElementById('feedback').innerText = 'Permission for the barometer sensor is denied.';
+                        }
+                    })
+                    .then(permission => {
+                        if (permission.state === 'granted') {
+                            startSensor();
+                        }
+                    });
+            }
+        });
     </script>
 </body>
 </html>
