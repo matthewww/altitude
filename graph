@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Altitude Tracker</title>
+</head>
+<body>
+    <h1>Altitude Tracker</h1>
+    <canvas id="altitudeChart" width="400" height="200"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let altitudeData = [];
+        let timeData = [];
+        
+        function updateLocation(position) {
+            const altitude = position.coords.altitude;
+            const timestamp = new Date().toLocaleTimeString();
+            
+            altitudeData.push(altitude);
+            timeData.push(timestamp);
+            
+            // Keep a maximum of 10 data points to prevent the chart from getting too crowded
+            if (altitudeData.length > 10) {
+                altitudeData.shift();
+                timeData.shift();
+            }
+            
+            updateAltitudeChart();
+        }
+        
+        function updateAltitudeChart() {
+            const ctx = document.getElementById("altitudeChart").getContext("2d");
+            
+            const data = {
+                labels: timeData,
+                datasets: [{
+                    label: "Altitude",
+                    data: altitudeData,
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 2,
+                    fill: false
+                }]
+            };
+            
+            const config = {
+                type: "line",
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: "Time"
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: "Altitude (m)"
+                            }
+                        }
+                    }
+                }
+            };
+            
+            if (window.altitudeChart) {
+                window.altitudeChart.destroy();
+            }
+            
+            window.altitudeChart = new Chart(ctx, config);
+        }
+        
+        function handleLocationError(error) {
+            console.error("Error getting geolocation: " + error.message);
+        }
+        
+        if ("geolocation" in navigator) {
+            // Watch the user's position and update the altitude data in real-time
+            navigator.geolocation.watchPosition(updateLocation, handleLocationError);
+        } else {
+            alert("Geolocation is not supported in your browser");
+        }
+    </script>
+</body>
+</html>
