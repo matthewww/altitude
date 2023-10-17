@@ -5,6 +5,9 @@
 </head>
 <body>
     <h1>Geolocation Tracker</h1>
+    <button id="startButton" onclick="startLogging()">Start Logging</button>
+    <button id="stopButton" onclick="stopLogging()" disabled>Stop Logging</button>
+
     <p id="feedback"></p>
     <p>Latitude: <span id="latitude">N/A</span></p>
     <p>Longitude: <span id="longitude">N/A</span></p>
@@ -30,6 +33,9 @@
 
     </script>
     <script>
+        let watchID;
+        let isLogging = false;
+        
         function updateLocation(position) {
             document.getElementById("latitude").textContent = position.coords.latitude;
             document.getElementById("longitude").textContent = position.coords.longitude;
@@ -48,22 +54,35 @@
             });
         }
 
-        function handleLocationError(error) {
-            document.getElementById("feedback").innerText = `Error getting geolocation: {error.message}`;
+         function startLogging() {
+            if (!isLogging) {
+                // Start watching for geolocation data
+                watchID = navigator.geolocation.watchPosition(updateLocation, handleLocationError);
+                isLogging = true;
+                document.getElementById("startButton").disabled = true;
+                document.getElementById("stopButton").disabled = false;
+            }
         }
 
-        if ("geolocation" in navigator) {
-            navigator.geolocation.watchPosition(updateLocation, handleLocationError);
-        } else {
+        function stopLogging() {
+            if (isLogging) {
+                // Stop watching for geolocation data
+                navigator.geolocation.clearWatch(watchID);
+                isLogging = false;
+                document.getElementById("startButton").disabled = false;
+                document.getElementById("stopButton").disabled = true;
+            }
+        }
+
+        function handleLocationError(error) {
+            console.error("Error getting geolocation: " + error.message);
+        }
+
+        if (!("geolocation" in navigator)) {
             alert("Geolocation is not supported in your browser");
         }
 
-        if ("barometricPressure" in window) {
-            function updateBarometricAltitude(altitude) {
-                document.getElementById("barometricAltitude").textContent = altitude;
-            }
-        window.barometricPressure.watchAltitude(updateBarometricAltitude);
-        } else {
+        if (!("barometricPressure" in window)) {
             document.getElementById("barometricAltitude").textContent = "N/A (Not supported)";
         }
     </script>
