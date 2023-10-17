@@ -13,6 +13,22 @@
     <p>Altitude Accuracy: <span id="altitudeAccuracy">N/A</span> meters</p>
     <p>Altitude (Barometric Pressure): <span id="barometricAltitude">N/A</span> meters</p>
 
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCHlnZp_URs2cEDOnOhBkDsp1v_dvruQOc",
+        authDomain: "altitudelogger.firebaseapp.com",
+        projectId: "altitudelogger",
+        storageBucket: "altitudelogger.appspot.com",
+        messagingSenderId: "90497077875",
+        appId: "1:90497077875:web:d3010b2b82cb76ce7f9006"
+      };
+      const firebase = initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+    </script>
     <script>
         function updateLocation(position) {
             document.getElementById("latitude").textContent = position.coords.latitude;
@@ -20,6 +36,16 @@
             document.getElementById("positionAccuracy").textContent = position.coords.accuracy;
             document.getElementById("altitude").textContent = position.coords.altitude;
             document.getElementById("altitudeAccuracy").textContent = position.coords.altitudeAccuracy;
+
+            const timestamp = new Date().toLocaleString();
+            database.ref('altitudeData').push({
+                timestamp: timestamp,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+                altitude: position.coords.altitude,
+                altitudeAccuracy: position.coords.altitudeAccuracy
+            });
         }
 
         function handleLocationError(error) {
