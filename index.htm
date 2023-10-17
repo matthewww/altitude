@@ -17,22 +17,20 @@
     <p>Altitude (Barometric Pressure): <span id="barometricAltitude">N/A</span> meters</p>
 
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyCHlnZp_URs2cEDOnOhBkDsp1v_dvruQOc",
-        authDomain: "altitudelogger.firebaseapp.com",
-        projectId: "altitudelogger",
-        storageBucket: "altitudelogger.appspot.com",
-        messagingSenderId: "90497077875",
-        appId: "1:90497077875:web:d3010b2b82cb76ce7f9006"
-      };
-      const firebase = initializeApp(firebaseConfig);
-      const database = firebase.database();
-
-    </script>
-    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyCHlnZp_URs2cEDOnOhBkDsp1v_dvruQOc",
+          authDomain: "altitudelogger.firebaseapp.com",
+          projectId: "altitudelogger",
+          storageBucket: "altitudelogger.appspot.com",
+          messagingSenderId: "90497077875",
+          appId: "1:90497077875:web:d3010b2b82cb76ce7f9006"
+        };
+        const firebase = initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
         let watchID;
         let isLogging = false;
         
