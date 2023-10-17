@@ -28,7 +28,8 @@
           messagingSenderId: "90497077875",
           appId: "1:90497077875:web:d3010b2b82cb76ce7f9006"
         };
-        const firebase = initializeApp(firebaseConfig);
+        
+        firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         
         let watchID;
