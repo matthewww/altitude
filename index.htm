@@ -16,8 +16,8 @@
     <p>Altitude Accuracy: <span id="altitudeAccuracy">N/A</span> meters</p>
     <p>Altitude (Barometric Pressure): <span id="barometricAltitude">N/A</span> meters</p>
     
-    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-firestore.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -30,7 +30,7 @@
         };
         
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const database = firebase.firestore();
         
         let watchID;
         let isLogging = false;
@@ -43,14 +43,23 @@
             document.getElementById("altitudeAccuracy").textContent = position.coords.altitudeAccuracy;
 
             const timestamp = new Date().toLocaleString();
-            database.ref('altitudeData').push({
-                timestamp: timestamp,
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-                altitude: position.coords.altitude,
-                altitudeAccuracy: position.coords.altitudeAccuracy
-            });
+            const data = {
+              timestamp: timestamp,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+              altitude: position.coords.altitude,
+              altitudeAccuracy: position.coords.altitudeAccuracy
+            };
+            
+            db.collection("altitudeData").add(data)
+              .then((docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+              })
+              .catch((error) => {
+                console.error("Error adding document: ", error);
+              });
+
         }
 
          function startLogging() {
