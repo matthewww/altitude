@@ -53,7 +53,7 @@
               altitudeAccuracy: position.coords.altitudeAccuracy
             };
             
-            db.collection("altitudeData").add(data)
+            database.collection("altitudeData").add(data)
               .then((docRef) => {
                 console.log("Document written with ID: ", docRef.id);
               })
