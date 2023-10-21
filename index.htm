@@ -32,9 +32,15 @@
         
         firebase.initializeApp(firebaseConfig);
         const database = firebase.firestore();
-        
-        let watchID;
+        const auth = firebase.auth();
         let isLogging = false;
+        let watchID;
+
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            isLogging = true;
+          }
+        });
         
         function updateLocation(position) {
             document.getElementById("latitude").textContent = position.coords.latitude;
